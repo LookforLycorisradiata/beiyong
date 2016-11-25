@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>头像上传</title>
+		<link rel="stylesheet" href="css/update.css" type="text/css" />
+	</head>
+
+	<body>
+		<div class="box">
+			<div class="title">
+				<h3>头像</h3>
+			</div>
+			<div class="container">
+				<div class="new-contentarea tc">
+					<a href="javascript:void(0)" class="upload-img">
+						<label for="upload-file">上传头像</label>
+					</a>
+					<input type="file" class="" name="upload-file" id="upload-file" />
+				</div>
+				<div class="show clearfix">
+					
+					<div class="imageBox">
+						<div class="thumbBox"></div>
+						<div class="spinner" style="display: none">Loading...</div>
+						<p>仅支持jpg、png、gif格式</p>
+					</div>
+					
+					<div class="cropped">
+						<div class="big">
+							<img src="" alt="" />
+							<p>大尺寸头像，180*180像素</p>
+							<p>您上传的图片将会自动生成三种尺寸的头像</p>
+						</div>
+						<div class="middle">
+							<img src="" alt="" />
+							<p>中尺寸头像，128*128像素</p>
+						</div>
+						<div class="small">
+							<img src="" alt="" />
+							<p>小尺寸头像，64*64像素</p>
+						</div>
+					</div>
+					
+					<div class="line"></div>
+				</div>
+				
+			    <input type="button" id="btnZoomIn" class="Btnsty_peyton" value="+"  >
+			    <input type="button" id="btnZoomOut" class="Btnsty_peyton" value="-" >
+				<input type="button" id="btnCrop"  class="Btnsty_peyton" value="保存图片">
+				
+			</div>
+
+		</div>
+		<script type="text/javascript" src="js/jquery-1.11.0.js"></script>
+		<script type="text/javascript" src="js/cropbox.js"></script>
+		<script type="text/javascript">
+			$(window).load(function() {
+				var options =
+				{
+					thumbBox: '.thumbBox',
+					spinner: '.spinner',
+					imgSrc: 'img/avatar.png'
+				}
+				var cropper = $('.imageBox').cropbox(options);
+				
+				
+				$('#upload-file').on('change', function(){
+					var reader = new FileReader();
+					reader.onload = function(e) {
+						options.imgSrc = e.target.result;
+						cropper = $('.imageBox').cropbox(options);
+					}
+					reader.readAsDataURL(this.files[0]);
+					this.files = null;
+					console.log(cropper);
+				})
+				$('#btnCrop').on('click', function(){
+					var img = cropper.getDataURL();
+					console.log("保存图片");
+					$(".big img").prop("src",img);
+					$(".middle img").prop("src",img);
+					$(".small img").prop("src",img);
+				})
+				$('#btnZoomIn').on('click', function(){
+					cropper.zoomIn();
+				})
+				$('#btnZoomOut').on('click', function(){
+					cropper.zoomOut();
+				})
+				
+				//阻止缩放图片时浏览器窗口本身滚动
+				$(".imageBox").on("mousewheel DOMMouseScroll",function(e){
+					var e=e||window.event;
+					if(e.preventDefault){
+						e.preventDefault();
+					}else{
+						e.returnValue=false;
+					}
+				})
+			});
+		</script>
+		
+	</body>
+
+</html>
